@@ -1,7 +1,6 @@
-streamlit==1.8.1
+streamlit==1.12.0
 pandas
-matplotlib
+numpy
 scikit-learn
-streamlit-drawable-canvas
-plotly
 streamlit-option-menu
+spacy
