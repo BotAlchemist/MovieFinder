@@ -4,7 +4,7 @@ Streamlit web app that lets user search movies by writing a simple synopsis of t
 This is a recommendation based search engine that is built using tf-idf and cosine similarity algorithm.
 
 ## Screenshots
-![App Screenshot](https://github.com/BotAlchemist/MovieFinder/blob/main/screenshots/seach_based_on_plot.JPG )
+![App Screenshot](https://github.com/BotAlchemist/MovieFinder/blob/main/screenshots/search_based_on_plot.JPG )
 
 
 
