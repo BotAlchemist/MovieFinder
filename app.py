@@ -9,7 +9,6 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 
 import pandas as pd
-import numpy as np
 import json
 import re
 import pickle
@@ -71,68 +70,58 @@ with st.sidebar:
     i_page= option_menu('MovieFinder', ['Home', 'Train model', 'Search'],
                         default_index=0, icons=['house','cpu', 'search' ], menu_icon= 'cast')
 if i_page == 'Train model':
-    
-    
-    tab1, tab2= st.tabs(['Train Synopsis', 'Train Keywords'])
-    with tab1:
-        st.header("Train model using Synopsis of the movies")
-        train1, train2= st.columns(2)
-        i_lang= train1.selectbox( "Select language",  df_movies['original_language'].unique())
-        i_release_year= train2.slider("Select period", df_movies['release_year'].min(),df_movies['release_year'].max(), (df_movies['release_year'].min(), df_movies['release_year'].max())  )
-        
-        
-        df_movies= df_movies[df_movies['original_language']== i_lang]
-        df_movies= df_movies[(df_movies['release_year'] >= i_release_year[0]) & (df_movies['release_year'] <=i_release_year[1] )]
-        train1.markdown("####           No. of records: "+ str(len(df_movies)))
-        
-        
-        if train2.button("Click here to train model"):
-            with st.spinner('Training the model'):
-                df_master= df_master[df_master['original_language']== i_lang]
-                train_filename= df_master['file_name'].unique()[0]
-                model_name= df_master['model_name'].unique()[0]
-                matrix_name= df_master['matrix_name'].unique()[0]
-                
-                
-                
-                
-                all_stopwords = nlp.Defaults.stop_words
-                
-                overview_processed=[]
-                for index, row in df_movies.iterrows():
-                    overview= row['overview']
-                    genre_names= get_genres(row['genres'])
-                    overview= overview + " " + genre_names
-                    overview = nlp(overview)
-                    overview= " ".join([token.text for token in overview if not token.text in all_stopwords])
-                    overview = nlp(overview)
-                    overview= " ".join([token.lemma_ for token in overview if not token.is_punct]).lower()
-                    overview = re.sub("\s+", " ", overview)
-                    overview_processed.append(overview)
-                    
-                df_movies['overview_processed']= overview_processed
 
-                # Initialize an instance of tf-idf Vectorizer
-                tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3))
-                
-                # Generate the tf-idf vectors for the corpus
-                tfidf_matrix = tfidf_vectorizer.fit_transform(df_movies['overview_processed'])
-                
-                # saving the model and vector
-                
-                pickle.dump(tfidf_vectorizer, open(model_name, 'wb'))
-                pickle.dump(tfidf_matrix, open(matrix_name, 'wb'))
-             
-            #df_movies= df_movies.drop("overview_processed", axis=1)
-            df_movies.to_csv(train_filename, index=False)
+    st.header("Train model using Synopsis of the movies")
+    train1, train2= st.columns(2)
+    i_lang= train1.selectbox( "Select language",  df_movies['original_language'].unique())
+    i_release_year= train2.slider("Select period", df_movies['release_year'].min(),df_movies['release_year'].max(), (df_movies['release_year'].min(), df_movies['release_year'].max())  )
+    
+    
+    df_movies= df_movies[df_movies['original_language']== i_lang]
+    df_movies= df_movies[(df_movies['release_year'] >= i_release_year[0]) & (df_movies['release_year'] <=i_release_year[1] )]
+    train1.markdown("####           No. of records: "+ str(len(df_movies)))
+    
+    
+    if train2.button("Click here to train model"):
+        with st.spinner('Training the model'):
+            df_master= df_master[df_master['original_language']== i_lang]
+            train_filename= df_master['file_name'].unique()[0]
+            model_name= df_master['model_name'].unique()[0]
+            matrix_name= df_master['matrix_name'].unique()[0]
+
+            all_stopwords = nlp.Defaults.stop_words
             
-            st.success("Model saved successfully")
+            overview_processed=[]
+            for index, row in df_movies.iterrows():
+                overview= row['overview']
+                genre_names= get_genres(row['genres'])
+                overview= overview + " " + genre_names
+                overview = nlp(overview)
+                overview= " ".join([token.text for token in overview if not token.text in all_stopwords])
+                overview = nlp(overview)
+                overview= " ".join([token.lemma_ for token in overview if not token.is_punct]).lower()
+                overview = re.sub("\s+", " ", overview)
+                overview_processed.append(overview)
+                
+            df_movies['overview_processed']= overview_processed
+
+            # Initialize an instance of tf-idf Vectorizer
+            tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3))
+            
+            # Generate the tf-idf vectors for the corpus
+            tfidf_matrix = tfidf_vectorizer.fit_transform(df_movies['overview_processed'])
+            
+            # saving the model and vector
+            
+            pickle.dump(tfidf_vectorizer, open(model_name, 'wb'))
+            pickle.dump(tfidf_matrix, open(matrix_name, 'wb'))
+         
+
+        df_movies.to_csv(train_filename, index=False)
+        
+        st.success("Model saved successfully")
             
     
-        
-
-    with tab2:
-        st.header("Placeholder for keyword train")
     
     
 if i_page == 'Search':
