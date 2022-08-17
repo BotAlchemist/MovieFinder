@@ -5,8 +5,8 @@ This is a recommendation based search engine that is built using tf-idf and cosi
 
 ## Screenshots
 
-##### Screenshot showing the results based on user input plot of the movie. Results can be filtered out based on time period of the released movies, the rating and the top n similar movies.
-![App Screenshot](https://github.com/BotAlchemist/MovieFinder/blob/main/screenshots/search_based_on_plot.JPG )
+##### Demo showing the results based on user input plot of the movie. Results can be filtered out based on time period of the released movies, the rating and the top n similar movies.
+![App_Demo](https://github.com/BotAlchemist/MovieFinder/blob/main/screenshots/movieFinder.gif)
 
 
 
